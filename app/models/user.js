@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
+    id: {
+        type: String,
+        unique: true,
+        required: "veuillez saisir votre id"
+    },
+
     pseudo: {
         type: String,
         unique: false,

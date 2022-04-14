@@ -2,17 +2,29 @@ const mongoose = require('mongoose');
 const Users = require('../controllers/users');
 
 const SchemaEvent = new mongoose.Schema({
-    Nom: {
+    name: {
         type: String,
-        unique: false,
-        required: "veuillez donner un Nom à votre event"
-        
+        required: [true, 'event name is required']
     },
-    Description :  {
+    description: {
         type: String,
-        unique: false,
-        required: "veuillez saisir une description"
-    }
+        required: [true, 'Event description is required']
+    },
+    beginDate:{
+        type: Date,
+        default: Date.now
+    },
+    endDate: Date,
+    location: String,
+    coverPicture: String,
+    visibility: {
+        type: String,
+        enum:['Private','Public'],
+        required: true
+    },
+    organisateurs:[{ type: mongoose.Schema.Types.ObjectId, ref: 'User', required:true }],
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, {
     collection: 'events',
     minimize: false,

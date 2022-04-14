@@ -31,10 +31,20 @@ module.exports = class Users {
                 });
             }
         });
-        this.app.delete('/users/:email',async (req, res)=> {
+
+        //get
+
+        this.app.get('/users/:email', (req, res)=> {
             try{
-                let user = await this.UserModel.deleteOne({ email: req.params.email }).exec();
-                res.status(200).json('user supprimé');
+                this.UserModel.findById(req.params.email).then((user) => {
+                    res.status(200).json(user || {})
+                  }).catch((err) => {
+                    res.status(400).json({
+                      status: 400,
+                      message: err
+                    })
+                  })
+                
             } catch(err) {
                 console.error(`[ERROR] post:users -> ${err}`);
             
@@ -44,5 +54,31 @@ module.exports = class Users {
                 });
             }
         });
+
+
+
+        //delete
+        this.app.delete('/user/:email', (req, res)=> {
+            try{
+
+                this.UserModel.findOneAndDelete(req.params.email).then((user) => {
+                    res.status(200).json(user || {})
+                  }).catch((err) => {
+                    res.status(400).json({
+                      status: 400,
+                      message: err
+                    })
+                  })
+            } catch(err) {
+                console.error(`[ERROR] post:users -> ${err}`);
+            
+                res.status(400).json({
+                    code: 400,
+                    message: `${err}`
+                });
+            }
+        });
+
+      
     }
 }
